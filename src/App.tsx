@@ -13,6 +13,8 @@ const App: React.FC = () => {
     <Provider store={store}>
       <Router>
         <Routes>
+          //TODO: move to config routes.ts
+          //TODO: add page not found
           <Route path='/' element={<MainLayout />}>
             <Route index element={<HomePage />} />
           </Route>
