@@ -1,7 +1,8 @@
-import { createSlice, PayloadAction  } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
+import { todos } from '../../../mockTodos';
+type ID = number;
 
-
-interface Todo {
+export interface Todo {
   id: number;
   title: string;
   completed: boolean;
@@ -12,30 +13,64 @@ interface Todo {
 
 interface TodosState {
   todos: Todo[];
+  index: Map<ID, Todo>;
+  loading: boolean;
+  error: string | null;
 }
 
 const initialState: TodosState = {
-  todos: []
+  todos: [],
+  index: new Map(),
+  loading: false,
+  error: null,
 };
+
+export const fetchTodos = createAsyncThunk('todos/fetchTodos', async (): Promise<Todo[]> => {
+  //TODO: connect client
+  return new Promise((resolve) => setTimeout(() => resolve(todos), 500));
+});
 
 const todosSlice = createSlice({
   name: 'todos',
   initialState,
   reducers: {
     addTodo: (state, action: PayloadAction<Todo>) => {
-      state.todos.push(action.payload)
+      state.todos.push(action.payload);
+      state.index.set(action.payload.id, action.payload)
     },
     toggleTodo: (state, action: PayloadAction<number>) => {
-      const todo = state.todos.find(({id}) => id === action.payload)
-      if(todo) {
-        todo.completed = !todo.completed
+      const todo = state.index.get(action.payload);
+      if (todo) {
+        todo.completed = !todo.completed;
       }
-    }, 
+    },
     removeTodo: (state, action: PayloadAction<number>) => {
-      state.todos = state.todos.filter(({id}) => id !== action.payload)
-    }
-  }
-})
- export const { addTodo, toggleTodo, removeTodo } = todosSlice.actions
+      state.index.delete(action.payload);
+      state.todos = state.todos.filter(({ id }) => id !== action.payload);
+    },
+    updateTodo: (state, action: PayloadAction<Todo>) => {
+      const todo = state.index.get(action.payload.id);
+      if (todo) {
+        Object.assign(todo, action.payload);
+      }
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchTodos.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchTodos.fulfilled, (state, action: PayloadAction<Todo[]>) => {
+        state.loading = false;
+        state.todos = action.payload;
+        action.payload.forEach((todo) => state.index.set(todo.id, todo));
+      })
+      .addCase(fetchTodos.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'Failed to fetch todos';
+      });
+  },
+});
+export const { addTodo, toggleTodo, removeTodo } = todosSlice.actions;
 
- export default todosSlice.reducer
+export default todosSlice.reducer;
