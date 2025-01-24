@@ -13,14 +13,14 @@ export interface Todo {
 
 interface TodosState {
   todos: Todo[];
-  index: Map<ID, Todo>;
+  index: Record<ID, Todo>;
   loading: boolean;
   error: string | null;
 }
 
 const initialState: TodosState = {
   todos: [],
-  index: new Map(),
+  index: {},
   loading: false,
   error: null,
 };
@@ -36,20 +36,20 @@ const todosSlice = createSlice({
   reducers: {
     addTodo: (state, action: PayloadAction<Todo>) => {
       state.todos.push(action.payload);
-      state.index.set(action.payload.id, action.payload)
+      state.index[action.payload.id] =  action.payload
     },
     toggleTodo: (state, action: PayloadAction<number>) => {
-      const todo = state.index.get(action.payload);
+      const todo = state.index[action.payload]
       if (todo) {
         todo.completed = !todo.completed;
       }
     },
     removeTodo: (state, action: PayloadAction<number>) => {
-      state.index.delete(action.payload);
+      delete state.index[action.payload];
       state.todos = state.todos.filter(({ id }) => id !== action.payload);
     },
     updateTodo: (state, action: PayloadAction<Todo>) => {
-      const todo = state.index.get(action.payload.id);
+      const todo = state.index[action.payload.id];
       if (todo) {
         Object.assign(todo, action.payload);
       }
@@ -63,7 +63,7 @@ const todosSlice = createSlice({
       .addCase(fetchTodos.fulfilled, (state, action: PayloadAction<Todo[]>) => {
         state.loading = false;
         state.todos = action.payload;
-        action.payload.forEach((todo) => state.index.set(todo.id, todo));
+        action.payload.forEach((todo) => state.index[todo.id] = todo);
       })
       .addCase(fetchTodos.rejected, (state, action) => {
         state.loading = false;
