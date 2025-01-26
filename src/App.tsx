@@ -1,27 +1,21 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router';
 import { Provider } from 'react-redux';
+import { Route as _Route, routes } from './router';
 import { store } from './store';
-import MainLayout from './layouts/MainLayout';
-import HomePage from './pages/HomePage';
-import TodosLayout from './layouts/TodosLayout';
-import AllTodosPage from './pages/AllTodosPage';
-import SingleTodoPage from './pages/SingleTodoPage';
+const renderRoutes = (routes: _Route[]) =>
+  routes.map(({ path, layout: Layout, element, children }) => (
+    <Route key={path} path={path} element={ Layout ? <Layout /> : element && React.createElement(element)}>
+      {children && renderRoutes(children)}
+    </Route>
+  ));
 
 const App: React.FC = () => {
   return (
     <Provider store={store}>
       <Router>
         <Routes>
-          //TODO: move to config routes.ts
-          //TODO: add page not found
-          <Route path='/' element={<MainLayout />}>
-            <Route index element={<HomePage />} />
-          </Route>
-          <Route path='/todo' element={<TodosLayout />}>
-            <Route index element={<AllTodosPage />} />
-            <Route path=':id' element={<SingleTodoPage />} />
-          </Route>
+          {renderRoutes(routes)}    
         </Routes>
       </Router>
     </Provider>

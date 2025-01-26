@@ -25,7 +25,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ id, title, completed, isShortInfo }
             >
                 {title}
             </span>
-            {isShortInfo && <Link to={`/todo/${id}`}>More info</Link>}
+            {isShortInfo && <Link to={`/todos/${id}`}>More info</Link>}
         </li>
     );
 };
