@@ -4,6 +4,7 @@ import TodosLayout from '../layouts/TodosLayout';
 import AllTodosPage from '../pages/AllTodosPage';
 import HomePage from '../pages/HomePage';
 import SingleTodoPage from '../pages/SingleTodoPage';
+import TodosPage from "../pages/TodosPage";
 
 
 export type LayoutProps = Record<string, never>
@@ -34,13 +35,19 @@ export const routes: Route[] = [
     children: [
       {
         path: '',
-        element: AllTodosPage,
-        
-      },
-      {
-        path: ':id',
-        element: SingleTodoPage,
-      },
+        element: TodosPage,
+        children: [
+          {
+            path: '',
+            element: AllTodosPage,
+            
+          },
+          {
+            path: ':id',
+            element: SingleTodoPage,
+          },
+        ]
+      }
     ],
   },
 ];

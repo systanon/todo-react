@@ -1,17 +1,10 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState, AppDispatch } from '../store';
-import { fetchTodos } from '../store/todos/todosSlice';
+import React from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from '../store';
 import TodoList from '../components/TodoList';
 
 const AllTodosPage: React.FC = () => {
   const { loading, error } = useSelector((state: RootState) => state.todos);
-  const dispatch: AppDispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(fetchTodos());
-  }, [dispatch]);
-
   if (loading) {
     return <p>Loading ...</p>;
   }
