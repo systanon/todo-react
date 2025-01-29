@@ -1,16 +1,14 @@
 import React from 'react';
 import { Outlet } from 'react-router';
-// import Header from '../components/Header';
-// import Footer from '../components/Footer';
+import Breadcrumbs from '../components/Breadcrumbs';
 
 const TodosLayout: React.FC = () => {
   return (
     <div>
-      {/* <Header /> */}
+      <Breadcrumbs/>
       <main>
         <Outlet />
       </main>
-      {/* <Footer /> */}
     </div>
   );
 };
