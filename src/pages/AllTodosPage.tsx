@@ -26,7 +26,7 @@ const AllTodosPage: React.FC = () => {
       <button onClick={handleOpenModal} className='px-4 py-2 bg-blue-500 text-white rounded'>
         Open Modal
       </button>
-      <ModalWindow ref={modalRef} title='Form Modal' btnText='Open Modal' actions={false}>
+      <ModalWindow ref={modalRef} title='Form Modal' actions={false} description='Create new todo'>
         {({ close, confirm }) => <FormTodo close={close} confirm={confirm} />}
       </ModalWindow>
       <TodoList />

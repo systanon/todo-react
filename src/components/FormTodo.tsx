@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Checkbox, Input, Field, Label, Button } from '@headlessui/react';
 
-interface FormState {
+export interface FormState {
   title: string;
   completed: boolean;
 }
 
 interface FormTodoProps {
   initialData?: Partial<FormState>;
+  close: () => void;
+  confirm: (data: FormState) => void;
 }
 
 const FormTodo: React.FC<FormTodoProps> = ({ close, confirm, initialData }) => {
