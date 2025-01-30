@@ -1,41 +1,21 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router';
-import { useSelector } from 'react-redux';
-import { RootState } from '../store';
-import { useParams } from 'react-router';
-interface BreadcrumbsItem {
-  id: number;
-  parentId: number | null;
-  path: string;
-  name: string;
-  text: string;
-  disabled?: boolean;
-  dynamic?: boolean;
-}
 
-type Breadcrumbs = BreadcrumbsItem[];
+import { BreadcrumbsItem, BreadcrumbsType, useBreadcrumbs } from '../helper/breadcrumbsFactory';
 
-const getAllRoutes = (id: string | undefined, text: string | undefined): Breadcrumbs => [
-  { id: 0, parentId: null, path: '/', name: 'Home', text: 'Home' },
-  { id: 1, parentId: 0, path: '/todos', name: 'Todos', text: 'Todos' },
-  { id: 3, parentId: 1, path: `/todos/${id}`, name: 'Todo', text: text ?? '' },
-];
 
 const createBreadcrumbs = (
   currentRoute: BreadcrumbsItem | undefined,
-  routes: Breadcrumbs,
-): Breadcrumbs => {
+  routes: BreadcrumbsType,
+): BreadcrumbsType => {
   if (!currentRoute) return [];
   const parentRoute = routes.find((route) => route.id === currentRoute.parentId);
   return parentRoute ? [...createBreadcrumbs(parentRoute, routes), currentRoute] : [currentRoute];
 };
 
 const Breadcrumbs: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
-  const { index } = useSelector((state: RootState) => state.todos);
-  console.log('TCL: Breadcrumbs:React.FC -> index', index);
   const location = useLocation();
-  const routes = getAllRoutes(id, index[id]?.title);
+  const routes = useBreadcrumbs();
   const currentRoute = routes.find((route) => route.path === location.pathname);
   const breadcrumbs = currentRoute
     ? createBreadcrumbs({ ...currentRoute, disabled: true }, routes)
