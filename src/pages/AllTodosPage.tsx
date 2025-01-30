@@ -22,15 +22,18 @@ const AllTodosPage: React.FC = () => {
   }
 
   return (
-    <>
+    <div className='h-full grid grid-rows-[auto_1fr]'>
+      <div>
       <button onClick={handleOpenModal} className='px-4 py-2 bg-blue-500 text-white rounded'>
         Open Modal
       </button>
+
+      </div>
       <ModalWindow ref={modalRef} title='Form Modal' actions={false} description='Create new todo'>
         {({ close, confirm }) => <FormTodo close={close} confirm={confirm} />}
       </ModalWindow>
       <TodoList />
-    </>
+    </div>
   );
 };
 

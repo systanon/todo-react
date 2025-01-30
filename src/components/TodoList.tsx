@@ -7,7 +7,7 @@ const TodoList: React.FC = () => {
     const todos = useSelector((state: RootState) => state.todos.todos);
 
     return (
-        <ul>
+        <ul  className='flex flex-wrap justify-center p-4 gap-4'>
             {todos.map((todo) => (
                 <TodoItem
                     key={todo.id}
